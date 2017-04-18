@@ -1,0 +1,5 @@
+name: JoinVerifyBungee
+main: me.SimplyBallistic.JoinVerifyBungee.JoinVerifyBungee
+version: 1.0
+author: xBallisticBlazex
+softdepend: [BungeeBridgeS]
