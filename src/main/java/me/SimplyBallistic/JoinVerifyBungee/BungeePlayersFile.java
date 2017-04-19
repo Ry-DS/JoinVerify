@@ -2,20 +2,22 @@ package me.SimplyBallistic.JoinVerifyBungee;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import me.SimplyBallistic.util.PlayersFile;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
-public class PlayersFile{
+public class BungeePlayersFile implements PlayersFile{
 	private File file;
 	private Configuration config;
 	private JoinVerifyBungee plugin=JoinVerifyBungee.instance;
-	public PlayersFile() {
+	public BungeePlayersFile() {
 		
 		
 		file=new File(plugin.getDataFolder(), "verified.yml");
@@ -38,7 +40,11 @@ public class PlayersFile{
 			
 			
 		}
+		if(!JoinVerifyBungee.verifyAll&&config.getStringList("verified-players")==null){
+			config.set("verified-players", new ArrayList<>());
+		}
 	}
+	@Override
 	public void saveConfig(){
 		try {
 			ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
@@ -46,18 +52,22 @@ public class PlayersFile{
 			plugin.getLogger().info("Failed in saving player file! "+e.getMessage());
 		}
 	}
+	@Override
 	public void addPlayer(UUID p){
 		List<String> lst=config.getStringList("verified-players");
 		lst.add(p.toString());
 		config.set("verified-players", lst);
 		saveConfig();
 	}
+	@Override
 	public boolean containsPlayer(UUID p){
 		if(config.getStringList("verified-players").contains(p.toString()))
 			return true;
 		return false;
 	}
-	public void reload(CommandSender p) {
+	@Override
+	public void reload(Object ob) {
+		CommandSender p=(CommandSender)ob;
 		try {
 			
 			ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
@@ -76,4 +86,5 @@ public class PlayersFile{
 		}
 
 	}
+	
 }

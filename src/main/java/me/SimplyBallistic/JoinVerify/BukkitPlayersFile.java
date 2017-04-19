@@ -10,10 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class PlayersFile extends YamlConfiguration{
+import me.SimplyBallistic.util.PlayersFile;
+
+public class BukkitPlayersFile extends YamlConfiguration implements PlayersFile{
 	private File file;
 	private JoinVerify plugin=JoinVerify.instance;
-	public PlayersFile() {
+	public BukkitPlayersFile() {
 		
 		file=new File(plugin.getDataFolder(), "verified.yml");
 		try {
@@ -36,6 +38,7 @@ public class PlayersFile extends YamlConfiguration{
 			
 		}
 	}
+	@Override
 	public void saveConfig(){
 		try {
 			save(file);
@@ -43,19 +46,23 @@ public class PlayersFile extends YamlConfiguration{
 			plugin.getLogger().info("Failed in saving player file! "+e.getMessage());
 		}
 	}
+	@Override
 	public void addPlayer(UUID p){
 		List<String> lst=getStringList("verified-players");
 		lst.add(p.toString());
 		set("verified-players", lst);
 		saveConfig();
 	}
+	@Override
 	public boolean containsPlayer(UUID p){
 		if(getStringList("verified-players").contains(p.toString()))
 			return true;
 		return false;
 	}
-	public void reload(CommandSender p) {
+	@Override
+	public void reload(Object ob) {
 		plugin.reloadConfig();
+		CommandSender p=(CommandSender)ob;
 		try {
 			
 			load(file);
