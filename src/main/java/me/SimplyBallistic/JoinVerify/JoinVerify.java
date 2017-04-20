@@ -40,8 +40,11 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 		}
 		instance=this;
 		verified=new BukkitPlayersFile();
+		if(useBungee){
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	    getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
+	    
+		}
 	}
 	
 	
