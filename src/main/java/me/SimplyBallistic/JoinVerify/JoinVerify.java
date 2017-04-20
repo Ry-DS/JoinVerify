@@ -3,14 +3,21 @@ package me.SimplyBallistic.JoinVerify;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+
+import me.SimplyBallistic.JoinVerify.events.InventoryListener;
+import me.SimplyBallistic.JoinVerify.events.JoinListener;
+import me.SimplyBallistic.JoinVerify.inventory.Tester;
 
 /**
  * 
@@ -22,6 +29,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	public BukkitPlayersFile verified;
 	public static boolean verifyAll;
 	public static boolean useBungee;
+	public List<Player> verifying;
 	@Override
 	public void onEnable() {
 		getLogger().info("Starting up...");
@@ -40,6 +48,10 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 		}
 		instance=this;
 		verified=new BukkitPlayersFile();
+		verifying=new ArrayList<>();
+		getCommand("jverify").setExecutor(new VerifyCommand());
+		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 		if(useBungee){
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	    getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
@@ -76,5 +88,20 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	    	
 	    }
 	  }
+	 public void testPlayer(Player p){
+			verifying.add(p);
+			new Tester(p, this, ()->{
+				
+				verifying.remove(p);
+				if(!useBungee&&!verifyAll)
+				verified.addPlayer(p.getUniqueId());
+				else if(useBungee){
+					//TODO Bungee send code here<-
+				}
+			
+			},()->{
+				p.kickPlayer(ChatColor.GOLD+"You need to answer the test correctly!");
+			}).getInventory().open(p);
+		}
     
 }

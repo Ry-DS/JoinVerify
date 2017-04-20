@@ -49,6 +49,7 @@ public class BukkitPlayersFile extends YamlConfiguration implements PlayersFile{
 	@Override
 	public void addPlayer(UUID p){
 		List<String> lst=getStringList("verified-players");
+		if(!lst.contains(p.toString()))
 		lst.add(p.toString());
 		set("verified-players", lst);
 		saveConfig();

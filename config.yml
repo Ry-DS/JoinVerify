@@ -1,0 +1,5 @@
+# Whether to use bungee. If this is true, bungee bridge must be installed and the bungee server must be on and functional. 
+use-bungee: false
+# Whether to verify every single player coming in. This will avoid using the players file to keep track on when people passed the test. This will 
+# automatically happen if the plugin failed at creating the players file. 
+verify-all: false

@@ -1,0 +1,11 @@
+name: JoinVerify
+main: me.SimplyBallistic.JoinVerify.JoinVerify
+version: 1.0
+description:  Protect your server from bots!
+author: xBallisticBlazex
+commands:
+   jverify:
+      description: force test a player
+      usage: /<command> (player)
+      permission: joinverify.vcommand
+      aliases: [jvfy]
