@@ -1,12 +1,6 @@
 package me.SimplyBallistic.JoinVerifyBungee;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import java.util.UUID;
 
 import me.SimplyBallistic.util.TextComponent;
 import me.dommi2212.BungeeBridge.CustomPacketRecieveEvent;
@@ -14,7 +8,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -31,6 +24,30 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void onPacketRecieve(CustomPacketRecieveEvent e){
 		
+		if(e.getChannel().equalsIgnoreCase("JoinVerify")){
+			
+			String request=(String)e.getSubject();
+			plugin.getLogger().info("Incoming packet:  "+request);
+			if(request.startsWith("isVerified")){
+				if(JoinVerifyBungee.verifyAll)
+					e.setAnswer(true);
+				else{
+					UUID id=UUID.fromString(request.split(":")[1]);
+						e.setAnswer(plugin.file.containsPlayer(id));
+				}
+			}
+			
+			
+			
+			
+			else if(request.startsWith("verified")){
+				if(JoinVerifyBungee.verifyAll)e.setAnswer(true);
+				else{
+					UUID id=UUID.fromString(request.split(":")[1]);
+					plugin.file.addPlayer(id);
+				}
+			}
+		}
 		
 	}
 	@EventHandler
@@ -44,7 +61,7 @@ public class Listeners implements Listener {
 		
 		
 	}
-	@EventHandler
+	/*@EventHandler
 	public void onJoin(ServerConnectedEvent e){
 		if(plugin.file.containsPlayer(e.getPlayer().getUniqueId())){
 			plugin.getProxy().getScheduler().schedule(plugin, ()->{
@@ -82,6 +99,6 @@ public class Listeners implements Listener {
 			}, 1, TimeUnit.SECONDS);
 	}
 	
-	}
+	}*/
 
 }

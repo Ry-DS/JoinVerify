@@ -21,8 +21,18 @@ public class BungeePlayersFile implements PlayersFile{
 		
 		
 		file=new File(plugin.getDataFolder(), "verified.yml");
+		if(!file.exists())
+			try {
+				file.createNewFile();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		
+			
+		
 		try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+			config=ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 			plugin.getLogger().info("Player file successfully loaded!");
 			
 		} catch (Exception e) {
@@ -31,7 +41,7 @@ public class BungeePlayersFile implements PlayersFile{
 			try {
 				file.delete();
 				file.createNewFile();
-				ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+				config=ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 			} catch (IOException e1) {
 				plugin.getLogger().info("Failed generating file: "+e1.getMessage()+"! All players will be verified");
 				JoinVerifyBungee.verifyAll=true;
@@ -40,8 +50,10 @@ public class BungeePlayersFile implements PlayersFile{
 			
 			
 		}
-		if(!JoinVerifyBungee.verifyAll&&config.getStringList("verified-players")==null){
+		if(!JoinVerifyBungee.verifyAll
+				&&config.getStringList("verified-players")==null){
 			config.set("verified-players", new ArrayList<>());
+			saveConfig();
 		}
 	}
 	@Override
@@ -55,6 +67,8 @@ public class BungeePlayersFile implements PlayersFile{
 	@Override
 	public void addPlayer(UUID p){
 		List<String> lst=config.getStringList("verified-players");
+		if(lst.contains(p.toString()))
+			return;
 		lst.add(p.toString());
 		config.set("verified-players", lst);
 		saveConfig();
@@ -70,14 +84,14 @@ public class BungeePlayersFile implements PlayersFile{
 		CommandSender p=(CommandSender)ob;
 		try {
 			
-			ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+			config=ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 			
 		} catch (Exception e) {
 			
 			try {
 				file.delete();
 				file.createNewFile();
-				ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+				config=ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 				
 			} catch (Exception e1) {
 				p.sendMessage(new TextComponent("Failed in reloading players config!"));

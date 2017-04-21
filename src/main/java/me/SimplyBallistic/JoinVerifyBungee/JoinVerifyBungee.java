@@ -29,8 +29,12 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 		}
 		instance=this;
 		getProxy().getPluginManager().registerListener(this, new Listeners());
+		getDataFolder().mkdir();
 		file=new BungeePlayersFile();
 		initConfig();
+		try{
+		verifyAll=config.getBoolean("verify-all");}
+		catch(Exception e){verifyAll=true;}
 		
 		
 	}
@@ -66,6 +70,9 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 			
 			
 		}
+	}
+	public void reload(){
+		initConfig();
 	}
 	
 }

@@ -1,5 +1,7 @@
 package me.SimplyBallistic.util;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -131,8 +133,8 @@ public class IconMenu implements Listener {
    
     private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
         ItemMeta im = item.getItemMeta();
-            //im.setDisplayName(name);
-            //im.setLore(Arrays.asList(lore));
+            im.setDisplayName(name);
+            im.setLore(Arrays.asList(lore));
         item.setItemMeta(im);
         return item;
     }

@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import me.SimplyBallistic.JoinVerifyBungee.JoinVerifyBungee;
+
 public class VerifyCommand implements CommandExecutor {
 
 	@Override
@@ -13,13 +15,17 @@ public class VerifyCommand implements CommandExecutor {
 		if(args.length!=1)
 		return false;
 		String name=args[0];
-		if(name.equals("@all"))
+		if(name.equals("@all")){
 			Bukkit.getOnlinePlayers().forEach(p->{
 				JoinVerify.instance.testPlayer(p);
 				sender.sendMessage("Running test on "+p.getName());
 				
 				
-			});
+			});}
+		else if(name.equalsIgnoreCase("reload")){
+			JoinVerifyBungee.instance.file.reload(sender);
+			JoinVerifyBungee.instance.reload();
+		}
 		else{
 			if(Bukkit.getPlayer(name)==null){
 				sender.sendMessage(ChatColor.RED+"You need to give a valid player!");

@@ -18,6 +18,7 @@ import com.google.common.io.ByteStreams;
 import me.SimplyBallistic.JoinVerify.events.InventoryListener;
 import me.SimplyBallistic.JoinVerify.events.JoinListener;
 import me.SimplyBallistic.JoinVerify.inventory.Tester;
+import me.dommi2212.BungeeBridge.packets.PacketCustom;
 
 /**
  * 
@@ -97,6 +98,9 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 				verified.addPlayer(p.getUniqueId());
 				else if(useBungee){
 					//TODO Bungee send code here<-
+					PacketCustom packet = new PacketCustom("JoinVerify", "verified:"+p.getUniqueId()); 
+					String answer = (String) packet.send(); 
+					System.out.println(answer); 
 				}
 			
 			},()->{

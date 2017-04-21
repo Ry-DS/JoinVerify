@@ -6,6 +6,6 @@ author: xBallisticBlazex
 commands:
    jverify:
       description: force test a player
-      usage: /<command> (player)
+      usage: /<command> (player/@all) / reload
       permission: joinverify.vcommand
       aliases: [jvfy]
