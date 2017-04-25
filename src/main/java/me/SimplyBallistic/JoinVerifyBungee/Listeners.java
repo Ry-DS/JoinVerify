@@ -41,10 +41,11 @@ public class Listeners implements Listener {
 			
 			
 			else if(request.startsWith("verified")){
-				if(JoinVerifyBungee.verifyAll)e.setAnswer(true);
+				if(JoinVerifyBungee.verifyAll)e.setAnswer(false);
 				else{
 					UUID id=UUID.fromString(request.split(":")[1]);
 					plugin.file.addPlayer(id);
+					e.setAnswer(true);
 				}
 			}
 		}

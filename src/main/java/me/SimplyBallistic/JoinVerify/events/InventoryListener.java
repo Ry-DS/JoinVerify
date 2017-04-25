@@ -16,7 +16,7 @@ public class InventoryListener implements Listener {
 		if(e.getInventory().getName().startsWith(ChatColor.GOLD+"Click on the")&&JoinVerify.instance.verifying.contains(e.getPlayer())&&e.getPlayer() instanceof Player){
 			Inventory i=e.getInventory();
 			Player p=(Player)e.getPlayer();
-			Bukkit.getScheduler().scheduleSyncDelayedTask(JoinVerify.instance, ()->p.openInventory(i), 20);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(JoinVerify.instance, ()->p.openInventory(i), 2);
 			
 		}
 			

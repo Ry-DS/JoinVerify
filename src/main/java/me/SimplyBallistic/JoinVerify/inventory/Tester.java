@@ -38,9 +38,10 @@ public class Tester {
 	}
 	private void initMenu(IconMenu menu,ItemStack[]blocks){
 		int answers=0;
+		ItemStack glassPane=new ItemStack(Material.STAINED_GLASS_PANE,1,(short)rand.nextInt(14));
 		for(int i=0;i<27;i++){
 			if(i<10||i>16){ 
-				ItemStack glassPane=new ItemStack(Material.STAINED_GLASS_PANE,1,(short)rand.nextInt(15));
+				
 				menu.setOption(i, glassPane, "", "");
 				
 				
