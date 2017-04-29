@@ -6,8 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.SimplyBallistic.JoinVerifyBungee.JoinVerifyBungee;
-
 public class VerifyCommand implements CommandExecutor {
 
 	@Override
@@ -23,8 +21,9 @@ public class VerifyCommand implements CommandExecutor {
 				
 			});}
 		else if(name.equalsIgnoreCase("reload")){
-			JoinVerifyBungee.instance.file.reload(sender);
-			JoinVerifyBungee.instance.reload();
+			JoinVerify.instance.verified.reload(sender);
+			JoinVerify.instance.reloadConfig();
+			sender.sendMessage(ChatColor.GREEN+"Configs reloaded!");
 		}
 		else{
 			if(Bukkit.getPlayer(name)==null){

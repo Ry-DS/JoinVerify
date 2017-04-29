@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -47,6 +48,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 			getPluginLoader().disablePlugin(this);
 			return;
 		}
+		
 		instance=this;
 		verified=new BukkitPlayersFile();
 		verifying=new ArrayList<>();
@@ -58,10 +60,37 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	    getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
 	    
 		}
+		reloadConfig();
+		
+		
+	}
+	@Override
+	public void reloadConfig(){
+		saveDefaultConfig();
+		super.reloadConfig();
+		List<String> blocks = null;
+		try{
+			blocks=getConfig().getStringList("blocks");
+			for(int i=0;i<blocks.size();){
+				String s=blocks.get(i);
+				try{Material.valueOf(s.replaceAll(" ", "_").toUpperCase());}catch(Exception e){
+					getLogger().warning(s+" isn't a valid block! Removing from list...");
+					blocks.remove(i);
+					continue;
+				}
+				i++;
+			}
+			
+			}catch(Exception e){
+				getLogger().warning("Could not find 'blocks' list in config! Resulting to random blocks...");
+			}
+		finally{
+			getConfig().set("blocks", blocks);
+		}
 	}
 	
-	
 	 @Override
+	 @Deprecated
 	  public void onPluginMessageReceived(String channel, Player player, byte[] message) {
 	    if (!channel.equals("BungeeCord")) {
 	      return;
@@ -91,6 +120,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	  }
 	 public void testPlayer(Player p){
 			verifying.add(p);
+			JoinVerify.instance.getLogger().info("Testing "+p.getName()+"...");
 			new Tester(p, this, ()->{
 				
 				verifying.remove(p);
@@ -99,13 +129,14 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 				else if(useBungee){
 					//TODO Bungee send code here<-
 					PacketCustom packet = new PacketCustom("JoinVerify", "verified:"+p.getUniqueId()); 
-					String answer = (String) packet.send(); 
+					boolean answer = (boolean) packet.send(); 
 					System.out.println(answer); 
 				}
 			
 			},()->{
-				p.kickPlayer(ChatColor.GOLD+"You need to answer the test correctly!");
-			}).getInventory().open(p);
+				p.kickPlayer(getConfig().getString("messages.kick", ChatColor.GOLD+"You need to answer the test correctly!"));
+			},getConfig().getStringList("blocks"),getConfig().getString("messages.pickme"),
+					getConfig().getString("messages.item"),getConfig().getString("messages.title")).getInventory().open(p);
 		}
     
 }

@@ -17,7 +17,8 @@ public class Listeners implements Listener {
 	public void onCommand(ChatEvent e){
 		if(e.getReceiver() instanceof ProxiedPlayer &&
 				e.isCommand()&&
-				!plugin.file.containsPlayer(((ProxiedPlayer)e.getReceiver()).getUniqueId()));
+				!plugin.file.containsPlayer(((ProxiedPlayer)e.getReceiver()).getUniqueId()))
+			e.setCancelled(true);
 		
 		
 	}
@@ -29,11 +30,16 @@ public class Listeners implements Listener {
 			String request=(String)e.getSubject();
 			plugin.getLogger().info("Incoming packet:  "+request);
 			if(request.startsWith("isVerified")){
-				if(JoinVerifyBungee.verifyAll)
+				if(JoinVerifyBungee.verifyAll){
 					e.setAnswer(true);
+					plugin.getLogger().info("Verifyall was set to true, player set for verifying...");
+				}
 				else{
 					UUID id=UUID.fromString(request.split(":")[1]);
-						e.setAnswer(plugin.file.containsPlayer(id));
+					final boolean verified=plugin.file.containsPlayer(id);
+						e.setAnswer(verified);
+						plugin.getLogger().info("Player isVerified was "+verified+". Sending to server");
+						
 				}
 			}
 			
@@ -46,10 +52,11 @@ public class Listeners implements Listener {
 					UUID id=UUID.fromString(request.split(":")[1]);
 					plugin.file.addPlayer(id);
 					e.setAnswer(true);
+					plugin.getLogger().info("Player was added to list");
 				}
 			}
+			e.setAnswer(false);
 		}
-		
 	}
 	@EventHandler
 	public void onJoin(ServerConnectEvent e){

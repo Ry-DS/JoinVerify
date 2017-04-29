@@ -3,3 +3,25 @@ use-bungee: false
 # Whether to verify every single player coming in. This will avoid using the players file to keep track on when people passed the test. This will 
 # automatically happen if the plugin failed at creating the players file. 
 verify-all: false
+# Blocks to be used for testing, if there are not at least 7, 
+# Random blocks will be chosen for place holders
+
+
+blocks: 
+- dirt
+- diamond block
+- gold block
+- web
+- boat 
+- wood
+- anvil
+# Whether to kick if player attempts to do something while they are being tested
+kick-on-fail: false
+
+# Messages to configure
+messages:
+  title: "&2Click on the &3&l%item%"
+  item: "&a&l%item%"
+  pickme: "&6Pick Me!"
+  deny: "&cYou're denied from using commands till you're verified"
+  kick: "&6Please choose the correct item"
