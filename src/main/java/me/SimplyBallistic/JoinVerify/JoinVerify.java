@@ -86,6 +86,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 			}
 		finally{
 			getConfig().set("blocks", blocks);
+			saveConfig();
 		}
 	}
 	
