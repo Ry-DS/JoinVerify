@@ -33,9 +33,8 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 		getDataFolder().mkdir();
 		file=new BungeePlayersFile();
 		initConfig();
-		try{
-		verifyAll=config.getBoolean("verify-all");}
-		catch(Exception e){verifyAll=true;}
+	
+		verifyAll=config.getBoolean("verify-all");
 		
 		
 	}
@@ -55,7 +54,7 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 			
 		}
 			try {
-				ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
+				config=ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
 				getLogger().info("config file successfully loaded!");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
