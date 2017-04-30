@@ -39,6 +39,7 @@ public class Listeners implements Listener {
 					final boolean verified=plugin.file.containsPlayer(id);
 						e.setAnswer(verified);
 						plugin.getLogger().info("Player isVerified was "+verified+". Sending to server");
+						return;
 						
 				}
 			}
