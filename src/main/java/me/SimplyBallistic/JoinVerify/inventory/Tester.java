@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +35,7 @@ public class Tester {
 		answerBlock=blocks[answer].getType().toString();
 		//11-17 is slot range
 		
-		testMenu=new IconMenu(ChatColor.translateAlternateColorCodes('&', guiName.replaceAll("%item%",blocks[answer].getType().toString().replaceAll("_", " ") )), 27, event->{
+		testMenu=new IconMenu(guiName.replaceAll("%item%",blocks[answer].getType().toString().replaceAll("_", " ") ), 27, event->{
 			if(event.getPosition()<10||event.getPosition()>16)
 				event.setWillClose(false);
 			else if(event.getPosition()-10==answer){
@@ -63,8 +62,8 @@ public class Tester {
 				
 			}
 			else {
-				menu.setOption(i, blocks[answers], ChatColor.translateAlternateColorCodes('&', itemName).replaceAll("%item%", blocks[answers].getType().toString()), 
-						answers==answer ? ChatColor.translateAlternateColorCodes('&',pickName ):"");//this is temp
+				menu.setOption(i, blocks[answers], itemName.replaceAll("%item%", blocks[answers].getType().toString()), 
+						answers==answer ? pickName :"");//this is temp
 				answers++;
 				
 			}

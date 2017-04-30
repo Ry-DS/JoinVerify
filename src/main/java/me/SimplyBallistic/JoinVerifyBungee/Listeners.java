@@ -31,7 +31,7 @@ public class Listeners implements Listener {
 			plugin.getLogger().info("Incoming packet:  "+request);
 			if(request.startsWith("isVerified")){
 				if(JoinVerifyBungee.verifyAll){
-					e.setAnswer(true);
+					e.setAnswer(false);
 					plugin.getLogger().info("Verifyall was set to true, player set for verifying...");
 				}
 				else{
@@ -53,6 +53,9 @@ public class Listeners implements Listener {
 					plugin.file.addPlayer(id);
 					e.setAnswer(true);
 					plugin.getLogger().info("Player was added to list");
+					return;
+					
+					
 				}
 			}
 			e.setAnswer(false);
@@ -60,7 +63,8 @@ public class Listeners implements Listener {
 	}
 	@EventHandler
 	public void onJoin(ServerConnectEvent e){
-		if(!plugin.file.containsPlayer(e.getPlayer().getUniqueId())&&e.getPlayer().getServer()!=null){
+		if(!plugin.file.containsPlayer(e.getPlayer().getUniqueId())&&e.getPlayer().getServer()!=null&&!e.getPlayer().hasPermission("joinverify.bypass")&&
+				!JoinVerifyBungee.verifyAll){
 			e.setCancelled(true);
 			
 			e.getPlayer().sendMessage(new TextComponent("You cannot join a server until you verify yourself!").setCol(ChatColor.RED));

@@ -29,6 +29,7 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 		}
 		instance=this;
 		getProxy().getPluginManager().registerListener(this, new Listeners());
+		if(!getDataFolder().exists())
 		getDataFolder().mkdir();
 		file=new BungeePlayersFile();
 		initConfig();
@@ -50,26 +51,18 @@ public class JoinVerifyBungee extends Plugin implements Listener{
 			} catch (IOException e) {
 				getLogger().info("Failed in creating config file! "+e.getMessage());
 			}
+			finally{}
 			
 		}
-		try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-			getLogger().info("config file successfully loaded!");
-			
-		} catch (Exception e) {
-			getLogger().info("config file corrupted! Generating new file...");
-			
 			try {
-				configFile.delete();
-				configFile.createNewFile();
 				ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-			} catch (IOException e1) {
-				getLogger().info("Failed generating file: "+e1.getMessage()+"! Defaults will be used");
-				
+				getLogger().info("config file successfully loaded!");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			
-		}
 	}
 	public void reload(){
 		initConfig();

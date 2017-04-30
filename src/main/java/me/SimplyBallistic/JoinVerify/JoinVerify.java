@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +32,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	public BukkitPlayersFile verified;
 	public static boolean verifyAll;
 	public static boolean useBungee;
-	public List<Player> verifying;
+	public List<UUID> verifying;
 	@Override
 	public void onEnable() {
 		getLogger().info("Starting up...");
@@ -55,11 +56,7 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 		getCommand("jverify").setExecutor(new VerifyCommand());
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-		if(useBungee){
-		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-	    getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
-	    
-		}
+		getLogger().info("Started!");
 		reloadConfig();
 		
 		
@@ -119,25 +116,29 @@ public class JoinVerify extends JavaPlugin implements PluginMessageListener{
 	    	
 	    }
 	  }
+	 public String transCol(String s){
+		 return ChatColor.translateAlternateColorCodes('&', s);
+	 }
 	 public void testPlayer(Player p){
-			verifying.add(p);
+			verifying.add(p.getUniqueId());
 			JoinVerify.instance.getLogger().info("Testing "+p.getName()+"...");
 			new Tester(p, this, ()->{
 				
-				verifying.remove(p);
+				verifying.remove(p.getUniqueId());
 				if(!useBungee&&!verifyAll)
 				verified.addPlayer(p.getUniqueId());
 				else if(useBungee){
 					//TODO Bungee send code here<-
-					PacketCustom packet = new PacketCustom("JoinVerify", "verified:"+p.getUniqueId()); 
+					PacketCustom packet = new PacketCustom("JoinVerify", "verified:"+p.getUniqueId().toString()); 
 					boolean answer = (boolean) packet.send(); 
 					System.out.println(answer); 
 				}
 			
 			},()->{
-				p.kickPlayer(getConfig().getString("messages.kick", ChatColor.GOLD+"You need to answer the test correctly!"));
-			},getConfig().getStringList("blocks"),getConfig().getString("messages.pickme"),
-					getConfig().getString("messages.item"),getConfig().getString("messages.title")).getInventory().open(p);
+				p.kickPlayer(transCol(
+						getConfig().getString("messages.kick")));
+			},getConfig().getStringList("blocks"),transCol(getConfig().getString("messages.pickme")),
+					transCol(getConfig().getString("messages.item")),transCol(getConfig().getString("messages.title"))).getInventory().open(p);
 		}
     
 }

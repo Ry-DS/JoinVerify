@@ -2,7 +2,6 @@ package me.SimplyBallistic.JoinVerifyBungee;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,11 +49,7 @@ public class BungeePlayersFile implements PlayersFile{
 			
 			
 		}
-		if(!JoinVerifyBungee.verifyAll
-				&&config.getStringList("verified-players")==null){
-			config.set("verified-players", new ArrayList<>());
-			saveConfig();
-		}
+		
 	}
 	@Override
 	public void saveConfig(){
@@ -75,9 +70,8 @@ public class BungeePlayersFile implements PlayersFile{
 	}
 	@Override
 	public boolean containsPlayer(UUID p){
-		if(config.getStringList("verified-players").contains(p.toString()))
-			return true;
-		return false;
+		
+			return config.getStringList("verified-players").contains(p.toString());
 	}
 	@Override
 	public void reload(Object ob) {

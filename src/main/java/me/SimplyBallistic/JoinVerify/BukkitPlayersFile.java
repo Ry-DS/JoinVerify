@@ -9,12 +9,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import me.SimplyBallistic.util.PlayersFile;
 
 public class BukkitPlayersFile extends YamlConfiguration implements PlayersFile{
 	private File file;
-	private JoinVerify plugin=JoinVerify.instance;
+	private Plugin plugin=JoinVerify.instance;
 	public BukkitPlayersFile() {
 		
 		file=new File(plugin.getDataFolder(), "verified.yml");
@@ -56,16 +57,14 @@ public class BukkitPlayersFile extends YamlConfiguration implements PlayersFile{
 	}
 	@Override
 	public boolean containsPlayer(UUID p){
-		if(getStringList("verified-players").contains(p.toString()))
-			return true;
-		return false;
+			return getStringList("verified-players").contains(p.toString());
 	}
 	@Override
 	public void reload(Object ob) {
 		plugin.reloadConfig();
 		CommandSender p=(CommandSender)ob;
 		try {
-			
+			file=new File(plugin.getDataFolder(), "verified.yml");
 			load(file);
 			
 		} catch (Exception e) {
